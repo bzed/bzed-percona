@@ -1,0 +1,23 @@
+{
+  "name": "bzed-percona",
+  "version": "0.1.0",
+  "author": "bzed",
+  "summary": "Percona XtraDB Cluster setup",
+  "license": "Apache-2.0",
+  "source": "https://github.com/bzed/bzed-percona",
+  "project_page": "https://github.com/bzed/bzed-percona",
+  "issues_url": "https://github.com/bzed/bzed-percona/issues",
+  "dependencies": [
+    {"name":"puppetlabs-concat","version_requirement":">= 2.1.0"},
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null,
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "8"
+      ]
+    }
+  ]
+}

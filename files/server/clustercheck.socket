@@ -1,0 +1,10 @@
+[Unit]
+Description=MySQL Clustercheck Socket for HAProxy
+
+[Socket]
+ListenStream=9200
+ReusePort=true
+Accept=true
+
+[Install]
+WantedBy=sockets.target

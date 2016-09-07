@@ -1,0 +1,7 @@
+[Unit]
+Description=MySQL Clustercheck for HAProxy
+
+[Service]
+EnvironmentFile=/etc/default/clustercheck
+StandardInput=socket
+ExecStart=/usr/bin/clustercheck $CS_USER $CS_PASSWORD 1 $LOGFILE 0 $MYS_CONFIG
