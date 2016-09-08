@@ -9,7 +9,8 @@ class percona::server(
     $wsrep_node_address = $::ipaddress,
     $mysql_options = {},
     $mysql_package = 'percona-xtradb-cluster-56',
-    $xtrabackup_directory = '/var/backups/mysql',
+    $mysql_service_manage = false,
+    $mysql_service_enable = false,
 ) {
 
     require ::percona::server::config
@@ -33,7 +34,7 @@ class percona::server(
     )
 
     $server_default_options = {
-        'mysqld'                          => {
+        'mysqld' => {
             'bind-address'                => $::ipaddress_eth0,
             'wsrep_node_address'          => $wsrep_node_address,
             'wsrep_cluster_address'       => "gcomm://${galera_nodes}",
@@ -56,8 +57,8 @@ class percona::server(
         package_name            => $mysql_package,
         service_provider        => 'systemd',
         service_name            => 'mysql.service',
-        service_manage          => false,
-        service_enabled         => false,
+        service_manage          => $mysql_service_manage,
+        service_enabled         => $mysql_service_enable,
         create_root_user        => true,
         create_root_my_cnf      => true,
         restart                 => false,
@@ -66,27 +67,9 @@ class percona::server(
         override_options        => $override_options,
     }
 
-    exec { 'disable-service-for-pxc' :
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        user    => root,
-        group   => root,
-        onlyif  => 'test -L /etc/rc2.d/S02mysql',
-        command => 'systemctl disable mysql.service'
-    }
-
     file {'/etc/logrotate.d/percona-server':
         ensure => file,
-        # FIXME
         source => 'puppet:///modules/percona/server/percona-server.logrotate',
-    }
-
-    file { '/usr/local/sbin/pxb2mysqldump' :
-        ensure => file,
-        mode   => '0750',
-        owner  => root,
-        group  => root,
-        # FIXME
-        source => 'puppet:///modules/percona/server/pxb2mysqldump',
     }
 
     file {'/etc/mysql/debian.cnf' :
@@ -95,7 +78,6 @@ class percona::server(
         group   => 'root',
         mode    => '0600',
         require => Class['::mysql::server'],
-        # FIXME
         content => template('percona/server/debian_cnf.erb'),
     }
 
@@ -124,30 +106,4 @@ class percona::server(
         require    => Mysql_user['sst@localhost']
     }
 
-
-    # clusterchk
-    class { 'percona::server::clustercheck' :
-        user     => 'clusterchk',
-        password => $clusterchk_password,
-    }
-
-    class { '::xtrabackup' :
-        dbuser     => 'root',
-        dbpass     => $root_password,
-# FIXME - set custom hours / minute
-        hour       => 1,
-        minute     => 17,
-        workdir    => "${xtrabackup_directory}/.workdir",
-        outputdir  => $xtrabackup_directory,
-        addrepo    => false,
-        keepdays   => 9,
-        silentcron => true,
-        parallel   => ceiling($::processorcount / 2),
-    }
-    file { "${xtrabackup_directory}/.workdir" :
-        ensure => directory,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0750',
-    }
 }

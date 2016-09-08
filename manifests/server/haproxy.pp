@@ -1,11 +1,12 @@
 class percona::server::haproxy(
     $clustername,
+    $wsrep_node_address,
     $haproxy_global_options = {},
     $haproxy_defaults_options = {},
     $haproxy_backend_options = {},
     $haproxy_socket = '/run/haproxy/admin.sock',
-    $haproxy_readonly_frontend_bind  = { "${::galera_wsrep_node_address}::3307" => [] },
-    $haproxy_readwrite_frontend_bind = { "${::galera_wsrep_node_address}::3308" => [] },
+    $haproxy_readonly_frontend_bind  = { "${wsrep_node_address}::3307" => [] },
+    $haproxy_readwrite_frontend_bind = { "${wsrep_node_address}::3308" => [] },
     $haproxy_balancermember_options = 'check port 9200 inter 12000 rise 3 fall 3 weight 100',
 ){
 
@@ -15,9 +16,9 @@ class percona::server::haproxy(
     $clusternodes_array = split($clusternodes, ',')
 
     if ($clusternodes_array
-        and $::galera_wsrep_node_address
+        and $wsrep_node_address
         and !empty($clusternodes_array)
-        and $clusternodes_array[0] == $::galera_wsrep_node_address
+        and $clusternodes_array[0] == $wsrep_node_address
     ) {
         $rw_backend = true
     } else {
@@ -28,7 +29,6 @@ class percona::server::haproxy(
     $haproxy_default_global_options = {
         'log'      => [
             '/var/lib/haproxy/dev/log local0',
-            "${::conova_basics::syslog_server}:515 local0",
         ],
         'chroot'   => '/var/lib/haproxy',
         'stats'    => "socket ${haproxy_socket} level admin mode 0660",
@@ -112,7 +112,7 @@ class percona::server::haproxy(
     @@::haproxy::balancermember{"${::hostname}-ro":
         listening_service => "${clustername}-ro",
         ports             => 3306,
-        ipaddresses       => $::galera_wsrep_node_address,
+        ipaddresses       => $wsrep_node_address,
         server_names      => $::hostname,
         options           => $haproxy_balancermember_options,
         tag               => 'bzed-percona_cluster',
@@ -127,7 +127,7 @@ class percona::server::haproxy(
     @@::haproxy::balancermember{"${::hostname}-rw":
         listening_service => "${clustername}-rw",
         ports             => 3306,
-        ipaddresses       => $::galera_wsrep_node_address,
+        ipaddresses       => $wsrep_node_address,
         server_names      => $::hostname,
         options           => "${haproxy_balancermember_options} ${rw_backup}",
         tag               => 'bzed-percona_cluster',
