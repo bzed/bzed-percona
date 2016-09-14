@@ -8,7 +8,7 @@ class percona::garbd(
 
 
     $galera_nodes = regsubst(
-        pick(
+        pick_default(
             getvar("::percona_cluster_${clustername}"),
             ''
         ),
