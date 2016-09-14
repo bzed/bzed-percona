@@ -27,7 +27,7 @@ class percona::server(
     $galera_nodes = regsubst(
         pick(
             getvar("::percona_cluster_${clustername}"),
-            $wsrep_node_address,
+            $wsrep_node_address
         ),
         ',$',
         ''
