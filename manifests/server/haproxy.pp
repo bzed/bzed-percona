@@ -81,7 +81,7 @@ class percona::server::haproxy(
     Haproxy::Backend{
         options => deep_merge(
             $haproxy_default_backend_options,
-            $haproxy_backend_options,
+            $haproxy_backend_options
         ),
         collect_exported => false,
         require          => Service['clustercheck.socket'],
