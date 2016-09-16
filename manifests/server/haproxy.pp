@@ -73,7 +73,7 @@ class percona::server::haproxy(
         ),
         defaults_options => deep_merge(
             $haproxy_default_defaults_options,
-            $haproxy_defaults_options,
+            $haproxy_defaults_options
         ),
     }
 
