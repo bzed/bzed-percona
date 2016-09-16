@@ -5,8 +5,8 @@ class percona::server::haproxy(
     $haproxy_defaults_options = {},
     $haproxy_backend_options = {},
     $haproxy_socket = '/run/haproxy/admin.sock',
-    $haproxy_readonly_frontend_bind  = { "${wsrep_node_address}::3307" => [] },
-    $haproxy_readwrite_frontend_bind = { "${wsrep_node_address}::3308" => [] },
+    $haproxy_readonly_frontend_bind  = { "${wsrep_node_address}:3307" => [] },
+    $haproxy_readwrite_frontend_bind = { "${wsrep_node_address}:3308" => [] },
     $haproxy_balancermember_options = 'check port 9200 inter 12000 rise 3 fall 3 weight 100',
 ){
 
