@@ -63,7 +63,7 @@ class percona::server::haproxy(
             'tcplog',
             'httpchk',
         ],
-        'maxconn' => '2048',
+        'fullconn' => '2048',
     }
 
     class { '::haproxy' :
