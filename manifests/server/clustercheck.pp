@@ -31,7 +31,7 @@ class percona::server::clustercheck (
     }
     file{'/etc/default/clustercheck':
         ensure  => file,
-        content => join( join_keys_to_values($options,'='),"\n"),
+        content => join( sort(join_keys_to_values($options,'=')),"\n"),
     }
     service{'clustercheck.socket':
         ensure    => running,
