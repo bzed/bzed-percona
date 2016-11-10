@@ -1,6 +1,6 @@
 class percona::server::config {
 
-    $buffersize = floor( $::memorysize_mb * 0.86 )
+    $buffersize = floor( $::memorysize_mb * 0.8 )
     $pool_instances = ceiling( $buffersize / 1024 )
 
     $mysql_options = {
