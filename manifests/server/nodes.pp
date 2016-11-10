@@ -5,7 +5,7 @@ class percona::server::nodes(
     concat { $target:
         ensure => present,
     }
-    concat::fragment { 'header':
+    concat::fragment { "percona_cluster_${clustername}_header":
         target  => $target,
         content => "percona_cluster_${clustername}=",
         order   => '01'
