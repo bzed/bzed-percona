@@ -7,4 +7,4 @@ ReusePort=true
 Accept=true
 
 [Install]
-WantedBy=sockets.target
+After=mysql.service
