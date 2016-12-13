@@ -35,6 +35,7 @@ class percona::server::clustercheck (
     }
     service{'clustercheck.socket':
         ensure    => running,
+        enable    => true,
         provider  => 'systemd',
         require   => File['/etc/systemd/system/clustercheck.socket'],
         subscribe => Exec['clusterchk-systemctl-daemon-reload'],
