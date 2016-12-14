@@ -19,7 +19,7 @@ class percona::garbd(
         ',$',
         ''
     )
-    $package = pick($garbd_package, $::percona::garbd_package, 'percona-xtradb-cluster-garbd-56')
+    $package = pick($garbd_package, $::percona::garbd_package, 'percona-xtradb-cluster-garbd-3')
 
     if ($galera_nodes and !empty($galera_nodes)) {
         ensure_packages($package)
