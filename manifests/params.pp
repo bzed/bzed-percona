@@ -15,6 +15,7 @@ class percona::params {
             $garbd_service = 'garb.service'
             $config_file = '/etc/my.cnf'
             $includedir = '/etc/my.cnf.d'
+            $wsrep_provider = '/usr/lib64/libgalera_smm.so'
         }
         'Debian': {
             $garbd_package = 'percona-xtradb-cluster-garbd-3'
@@ -24,6 +25,7 @@ class percona::params {
             $garbd_service = 'garbd.service'
             $config_file = '/etc/mysql/my.cnf'
             $includedir = '/etc/mysql/conf.d'
+            $wsrep_provider = '/usr/lib/libgalera_smm.so'
         }
         default: {
             fail("${::osfamily} is not supported by ${::module_name}")

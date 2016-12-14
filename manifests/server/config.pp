@@ -1,4 +1,5 @@
 class percona::server::config {
+    require ::percona::params
 
     $buffersize = $::percona::buffersize
     $pool_instances = $::percona::pool_instances
@@ -62,7 +63,7 @@ class percona::server::config {
             'datadir'                         => '/var/lib/mysql/data',
             #'bind-address'                    => $::ipaddress_eth0,
             #'wsrep_node_address'              => $::ipaddress_eth0,
-            'wsrep_provider'                  => '/usr/lib/libgalera_smm.so',
+            'wsrep_provider'                  => $::percona::params::wsrep_provider,
             #'wsrep_cluster_address'           => "gcomm://${gcom_addresses}",
             'wsrep_slave_threads'             => ($::processorcount * 2),
             'wsrep_sst_method'                => 'xtrabackup-v2',
