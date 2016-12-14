@@ -48,6 +48,9 @@ class percona::server(
             'pid-file'                    => '/var/run/mysqld/mysqld.pid',
             'log-error'                   => '/var/log/mysql/error.log',
         },
+        'mysqld-safe'   => {
+            'log-error' => '/var/log/mysql/error.log',
+        },
     }
 
     $override_options = mysql_deepmerge(
