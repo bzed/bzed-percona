@@ -84,7 +84,7 @@ class percona(
     class { '::percona::server::clustercheck' :
         user        => 'clusterchk',
         password    => $clusterchk_password,
-        mysqlconfig => $::percona::params::mysql_config,
+        mysqlconfig => $::percona::params::config_file,
         require     => Class['::percona::server'],
     }
 

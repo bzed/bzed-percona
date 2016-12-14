@@ -15,6 +15,7 @@ class percona::server(
     $mysql_service_enable = false,
 ) {
 
+    require ::percona::params
     require ::percona::server::config
     $default_options = $::percona::server::config::default_options
 
@@ -36,7 +37,7 @@ class percona::server(
     )
 
     $server_default_options = {
-        'mysqld' => {
+        'mysqld'                          => {
             'bind-address'                => $bind_address,
             'wsrep_node_address'          => $wsrep_node_address,
             'wsrep_cluster_address'       => "gcomm://${galera_nodes}",
@@ -44,6 +45,8 @@ class percona::server(
             'wsrep_cluster_name'          => $clustername,
             'wsrep_node_incoming_address' => $wsrep_node_address,
             'wsrep_sst_receive_address'   => $wsrep_node_address,
+            'pid-file'                    => '/var/run/mysqld/mysqld.pid',
+            'log-error'                   => '/var/log/mysql/error.log',
         },
     }
 
@@ -67,6 +70,8 @@ class percona::server(
         remove_default_accounts => true,
         root_password           => $root_password,
         override_options        => $override_options,
+        config_file             => $::percona::params::config_file,
+        includedir              => $::percona::params::includedir,
     }
 
     file {'/etc/logrotate.d/percona-server':
