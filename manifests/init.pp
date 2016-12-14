@@ -82,9 +82,10 @@ class percona(
 
     # clusterchk
     class { '::percona::server::clustercheck' :
-        user     => 'clusterchk',
-        password => $clusterchk_password,
-        require  => Class['::percona::server'],
+        user        => 'clusterchk',
+        password    => $clusterchk_password,
+        mysqlconfig => $::percona::params::mysql_config,
+        require     => Class['::percona::server'],
     }
 
     # haproxy
