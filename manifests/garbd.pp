@@ -27,7 +27,7 @@ class percona::garbd(
         if $::percona::params::garbd_fix_systemd == true {
             # work around having a buggy init script.
             # with some luck they'll ship a systemd service for jessie at some point
-            service { 'garbd.service' :
+            service { $::percona::params::garbd_service :
                 ensure     => running,
                 provider   => systemd,
                 hasrestart => true,
@@ -49,7 +49,7 @@ class percona::garbd(
             }
         }
         else {
-            service{ 'garbd.service' :
+            service{ $::percona::params::garbd_service :
                 ensure   => running,
                 enable   => true,
                 provider => systemd,

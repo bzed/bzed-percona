@@ -12,12 +12,14 @@ class percona::params {
             $mysql_package = 'Percona-XtraDB-Cluster-56'
             $garbd_fix_systemd = false
             $garbd_params_location = '/etc/sysconfig/garb'
+            $garbd_service = 'garb.service'
         }
         'Debian': {
             $garbd_package = 'percona-xtradb-cluster-garbd-3'
             $mysql_package = 'percona-xtradb-cluster-56'
             $garbd_fix_systemd = true
             $garbd_params_location = '/etc/default/garbd'
+            $garbd_service = 'garbd.service'
         }
         default: {
             fail("${::osfamily} is not supported by ${::module_name}")
