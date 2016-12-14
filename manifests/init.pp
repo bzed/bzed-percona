@@ -49,10 +49,12 @@ class percona(
     $clusterchk_password,
     $sst_password,
     $replication_password,
-    $bind_address = $::ipaddress,
-    $wsrep_node_address = $bind_address,
+    $bind_address = $::percona::params::bind_address,
+    $wsrep_node_address = $::percona::params::wsrep_node_address,
     $mysql_options = {},
-    $mysql_package = 'percona-xtradb-cluster-56',
+    $garbd_package = $::percona::params::garbd_package,
+    $garbd_fix_systemd = $::percona::params::garbd_fix_systemd,
+    $mysql_package = $::percona::params::mysql_package,
     $haproxy_global_options = {},
     $haproxy_defaults_options = {},
     $haproxy_backend_options = {},
@@ -60,7 +62,9 @@ class percona(
     $haproxy_readonly_frontend_bind  = { "${wsrep_node_address}::3307" => [] },
     $haproxy_readwrite_frontend_bind = { "${wsrep_node_address}::3308" => [] },
     $haproxy_balancermember_options = 'check port 9200 inter 12000 rise 3 fall 3 weight 100',
-) {
+    $buffersize = $::percona::params::buffersize,
+    $pool_instances = $::percona::params::pool_instances,
+) inherits ::percona::params {
 
 
     class { '::percona::server' :
@@ -78,9 +82,10 @@ class percona(
 
     # clusterchk
     class { '::percona::server::clustercheck' :
-        user     => 'clusterchk',
-        password => $clusterchk_password,
-        require  => Class['::percona::server'],
+        user        => 'clusterchk',
+        password    => $clusterchk_password,
+        mysqlconfig => $::percona::params::config_file,
+        require     => Class['::percona::server'],
     }
 
     # haproxy
@@ -94,6 +99,6 @@ class percona(
         haproxy_readonly_frontend_bind  => $haproxy_readonly_frontend_bind,
         haproxy_readwrite_frontend_bind => $haproxy_readwrite_frontend_bind,
         haproxy_balancermember_options  => $haproxy_balancermember_options,
-        require                         => Class['::percona::server::clustercheck']
+        require                         => Class['::percona::server::clustercheck'],
     }
 }
