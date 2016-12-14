@@ -2,7 +2,7 @@
 
 class percona::garbd(
     $clustername,
-    $garbd_package,
+    $garbd_package = undef,
 ) {
 
     class { '::percona::server::nodes' :
