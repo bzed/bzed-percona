@@ -2,6 +2,7 @@
 
 class percona::garbd(
     $clustername,
+    $garbd_package,
 ) {
 
     class { '::percona::server::nodes' :
@@ -18,9 +19,10 @@ class percona::garbd(
         ',$',
         ''
     )
+    $package = pick($garbd_package, $::percona::garbd_package, 'percona-xtradb-cluster-garbd-56')
 
     if ($galera_nodes and !empty($galera_nodes)) {
-        ensure_packages($::percona::garbd_package)
+        ensure_packages($package)
 
         if $::percona::params::garbd_fix_systemd == true {
             # work around having a buggy init script.
