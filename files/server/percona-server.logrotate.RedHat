@@ -1,0 +1,20 @@
+### MANAGED BY PUPPET
+# - I put everything in one block and added sharedscripts, so that mysql gets 
+#   flush-logs'd only once.
+#   Else the binary logs would automatically increase by n times every day.
+/var/log/mysql.log /var/log/mysql/*.log {
+        daily
+        rotate 30
+        missingok
+        #create 600 mysql mysql
+        compress
+        sharedscripts
+    postrotate
+	# just if mysqld is really running
+	if test -x /usr/bin/mysqladmin && \
+	   /usr/bin/mysqladmin ping &>/dev/null
+	then
+	   /usr/bin/mysqladmin flush-logs
+	fi
+    endscript
+}

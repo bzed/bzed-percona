@@ -1,3 +1,5 @@
+# Install Percona
+
 class percona::server(
     $clustername,
     $root_password,
@@ -17,11 +19,11 @@ class percona::server(
     $default_options = $::percona::server::config::default_options
 
     ::percona::server::nodes::export { $wsrep_node_address :
-        clustername => $clustername
+        clustername => $clustername,
     }
 
     class { '::percona::server::nodes' :
-        clustername => $clustername
+        clustername => $clustername,
     }
 
     $galera_nodes = regsubst(
@@ -35,7 +37,7 @@ class percona::server(
 
     $server_default_options = {
         'mysqld' => {
-            'bind-address'                => $::ipaddress_eth0,
+            'bind-address'                => $bind_address,
             'wsrep_node_address'          => $wsrep_node_address,
             'wsrep_cluster_address'       => "gcomm://${galera_nodes}",
             'wsrep_sst_auth'              => "sst:${sst_password}",
@@ -51,7 +53,7 @@ class percona::server(
         $mysql_options
     )
 
-    class {'mysql::server' :
+    class {'::mysql::server' :
         package_ensure          => installed,
         package_manage          => true,
         package_name            => $mysql_package,
@@ -69,33 +71,34 @@ class percona::server(
 
     file {'/etc/logrotate.d/percona-server':
         ensure => file,
-        source => 'puppet:///modules/percona/server/percona-server.logrotate',
+        source => "puppet:///modules/percona/server/percona-server.logrotate.${::osfamily}",
     }
 
-    file {'/etc/mysql/debian.cnf' :
-        ensure  => file,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0600',
-        require => Class['::mysql::server'],
-        content => template('percona/server/debian_cnf.erb'),
-    }
+    if $::osfamily == 'Debian' {
+        file {'/etc/mysql/debian.cnf' :
+            ensure  => file,
+            owner   => 'root',
+            group   => 'root',
+            mode    => '0600',
+            require => Class['::mysql::server'],
+            content => template('percona/server/debian_cnf.erb'),
+        }
 
-    mysql_user { 'debian-sys-maint@localhost':
-        ensure                   => 'present',
-        max_connections_per_hour => '0',
-        max_queries_per_hour     => '0',
-        max_updates_per_hour     => '0',
-        max_user_connections     => '0',
-        password_hash            => mysql_password($debian_password),
-        require                  => Class['::mysql::server'],
+        mysql_user { 'debian-sys-maint@localhost':
+            ensure                   => 'present',
+            max_connections_per_hour => '0',
+            max_queries_per_hour     => '0',
+            max_updates_per_hour     => '0',
+            max_user_connections     => '0',
+            password_hash            => mysql_password($debian_password),
+            require                  => Class['::mysql::server'],
+        }
     }
-
 
     mysql_user{ 'sst@localhost':
       ensure        => 'present',
       password_hash => mysql_password($sst_password),
-      require       => Class['mysql::server']
+      require       => Class['mysql::server'],
     }
     mysql_grant { 'sst@localhost/*.*':
         ensure     => 'present',
@@ -103,7 +106,7 @@ class percona::server(
         privileges => ['RELOAD', 'LOCK TABLES', 'REPLICATION CLIENT'],
         table      => '*.*',
         user       => 'sst@localhost',
-        require    => Mysql_user['sst@localhost']
+        require    => Mysql_user['sst@localhost'],
     }
 
 }

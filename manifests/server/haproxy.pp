@@ -10,7 +10,9 @@ class percona::server::haproxy(
     $haproxy_balancermember_options = 'check port 9200 inter 12000 rise 3 fall 3 weight 100',
 ){
 
-    ensure_packages('hatop')
+    if $::osfamily == 'Debian' {
+        ensure_packages('hatop')
+    }
 
     $clusternodes = getvar("::percona_cluster_${clustername}")
     $clusternodes_array = split($clusternodes, ',')
@@ -106,8 +108,8 @@ class percona::server::haproxy(
     ::haproxy::backend{"${clustername}-ro": }
     ::haproxy::backend{"${clustername}-rw": }
 
-    Haproxy::Balancermember <<| listening_service == "${clustername}-ro" and tag == 'bzed-percona_cluster' |>>
-    Haproxy::Balancermember <<| listening_service == "${clustername}-rw" and tag == 'bzed-percona_cluster' |>>
+    Haproxy::Balancermember<<| listening_service == "${clustername}-ro" and tag == 'bzed-percona_cluster' |>>
+    Haproxy::Balancermember<<| listening_service == "${clustername}-rw" and tag == 'bzed-percona_cluster' |>>
 
     @@::haproxy::balancermember{"${::hostname}-ro":
         listening_service => "${clustername}-ro",
