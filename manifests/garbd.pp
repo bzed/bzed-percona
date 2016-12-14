@@ -63,7 +63,7 @@ class percona::garbd(
             group   => root,
             mode    => '0644',
             content => template('percona/garbd/defaults.erb'),
-            notify  => Service['garbd.service'],
+            notify  => Service[$::percona::params::garbd_service],
         }
 
         file { '/var/lib/galera' :
