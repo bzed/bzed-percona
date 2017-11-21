@@ -119,8 +119,6 @@ class percona::server::haproxy(
     options => {
       'option'  => [
         'log-health-checks',
-        'dontlognull',
-        'dontlog-normal',
         'tcplog',
       ],
     }
@@ -129,8 +127,6 @@ class percona::server::haproxy(
     options => {
       'option'  => [
         'log-health-checks',
-        'dontlognull',
-        'dontlog-normal',
         'tcplog',
       ],
     }
