@@ -109,17 +109,32 @@ class percona::server::haproxy(
     mode    => 'tcp',
     options => {
       'option'  => [
-        'log-health-checks',
-        'dontlognull',
-        'dontlog-normal',
         'tcplog',
       ],
       'default_backend' => "${clustername}-rw",
     },
   }
 
-  ::haproxy::backend{"${clustername}-ro": }
-  ::haproxy::backend{"${clustername}-rw": }
+  ::haproxy::backend{"${clustername}-ro":
+    options => {
+      'option'  => [
+        'log-health-checks',
+        'dontlognull',
+        'dontlog-normal',
+        'tcplog',
+      ],
+    }
+  }
+  ::haproxy::backend{"${clustername}-rw":
+    options => {
+      'option'  => [
+        'log-health-checks',
+        'dontlognull',
+        'dontlog-normal',
+        'tcplog',
+      ],
+    }
+  }
 
   Haproxy::Balancermember<<| listening_service == "${clustername}-ro" and tag == 'bzed-percona_cluster' |>>
   Haproxy::Balancermember<<| listening_service == "${clustername}-rw" and tag == 'bzed-percona_cluster' |>>
