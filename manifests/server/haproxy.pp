@@ -116,20 +116,8 @@ class percona::server::haproxy(
   }
 
   ::haproxy::backend{"${clustername}-ro":
-    options => {
-      'option'  => [
-        'log-health-checks',
-        'tcplog',
-      ],
-    }
   }
   ::haproxy::backend{"${clustername}-rw":
-    options => {
-      'option'  => [
-        'log-health-checks',
-        'tcplog',
-      ],
-    }
   }
 
   Haproxy::Balancermember<<| listening_service == "${clustername}-ro" and tag == 'bzed-percona_cluster' |>>
