@@ -1,3 +1,5 @@
+# Setup HAProxy
+
 class percona::server::haproxy(
   $clustername,
   $wsrep_node_address,
@@ -78,6 +80,7 @@ class percona::server::haproxy(
       $haproxy_default_defaults_options,
       $haproxy_defaults_options
     ),
+    restart_command  => '/bin/true',
   }
 
 
@@ -94,7 +97,7 @@ class percona::server::haproxy(
     bind    => $haproxy_readonly_frontend_bind,
     mode    => 'tcp',
     options => {
-      'option'  => [
+      'option'          => [
         'log-health-checks',
         'dontlognull',
         'dontlog-normal',
@@ -108,7 +111,7 @@ class percona::server::haproxy(
     bind    => $haproxy_readwrite_frontend_bind,
     mode    => 'tcp',
     options => {
-      'option'  => [
+      'option'          => [
         'tcplog',
       ],
       'default_backend' => "${clustername}-rw",
@@ -133,7 +136,9 @@ class percona::server::haproxy(
   }
 
   if $rw_backend {
+    #lint:ignore:empty_string_assignment
     $rw_backup = ''
+    #lint:endignore
   } else {
     $rw_backup = 'backup'
   }
