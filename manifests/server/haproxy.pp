@@ -63,7 +63,7 @@ class percona::server::haproxy(
 
   $haproxy_default_backend_options = {
     'mode'      => 'tcp',
-    'balance'   => 'roundrobin',
+    'balance'   => 'leastconn',
     option      => [
       'tcplog',
       'httpchk',
