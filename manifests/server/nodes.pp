@@ -11,5 +11,5 @@ class percona::server::nodes(
         order   => '01'
     }
 
-    Concat::Fragment <<| target == $target and tag == 'bzed-percona_cluster' |>>
+    Concat::Fragment<<| target == $target and tag == 'bzed-percona_cluster' |>>
 }

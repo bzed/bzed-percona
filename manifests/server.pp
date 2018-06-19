@@ -111,7 +111,7 @@ class percona::server(
     mysql_grant { 'sst@localhost/*.*':
         ensure     => 'present',
         options    => ['GRANT'],
-        privileges => ['RELOAD', 'LOCK TABLES', 'REPLICATION CLIENT'],
+        privileges => ['RELOAD', 'LOCK TABLES', 'REPLICATION CLIENT', 'PROCESS'],
         table      => '*.*',
         user       => 'sst@localhost',
         require    => Mysql_user['sst@localhost'],

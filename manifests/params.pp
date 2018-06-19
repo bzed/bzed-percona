@@ -1,9 +1,12 @@
 # The good, old params.pp pattern :)
 
-class percona::params {
+class percona::params(
+  $buffersize_factor = 0.8 # Recommended for 32GB and up
+) {
+
     $bind_address = $::ipaddress
     $wsrep_node_address = $::ipaddress
-    $buffersize = floor( $::memorysize_mb * 0.8 )
+    $buffersize = floor( $::memorysize_mb * $buffersize_factor )
     $pool_instances = ceiling( $buffersize / 1024 )
 
     case $::osfamily {
