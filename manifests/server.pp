@@ -77,11 +77,6 @@ class percona::server(
         includedir              => $::percona::params::includedir,
     }
 
-    file {'/etc/logrotate.d/percona-server':
-        ensure => file,
-        source => "puppet:///modules/percona/server/percona-server.logrotate.${::osfamily}",
-    }
-
     if $::osfamily == 'Debian' {
         file {'/etc/mysql/debian.cnf' :
             ensure  => file,
