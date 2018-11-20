@@ -1,14 +1,14 @@
 # The good, old params.pp pattern :)
 
 class percona::params(
-  $buffersize_factor = 0.8 # Recommended for 32GB and up
+  $buffersize_factor = 0.8, # Recommended for 32GB and up
+  $max_connections = 1600,
 ) {
 
     $bind_address = $::ipaddress
     $wsrep_node_address = $::ipaddress
     $buffersize = floor( $::memorysize_mb * $buffersize_factor )
     $pool_instances = ceiling( $buffersize / 1024 )
-    $max_connections = 1600
 
     case $::osfamily {
         'RedHat': {
