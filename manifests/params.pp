@@ -8,6 +8,7 @@ class percona::params(
     $wsrep_node_address = $::ipaddress
     $buffersize = floor( $::memorysize_mb * $buffersize_factor )
     $pool_instances = ceiling( $buffersize / 1024 )
+    $max_connections = 1600
 
     case $::osfamily {
         'RedHat': {

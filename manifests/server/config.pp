@@ -3,6 +3,7 @@ class percona::server::config {
 
     $buffersize = $::percona::buffersize
     $pool_instances = $::percona::pool_instances
+    $max_connections = $::percona::max_connections
 
     $mysql_options = {
         'mysqld'             => {
@@ -41,7 +42,7 @@ class percona::server::config {
             'max-heap-table-size'             => '32M',
             'query_cache_size'                => '0',
             'query_cache_type'                => '0',
-            'max-connections'                 => '1600',
+            'max-connections'                 => $max_connections,
             'thread-cache-size'               => '3200',
             'open-files-limit'                => '65535',
             'table-definition-cache'          => '4096',

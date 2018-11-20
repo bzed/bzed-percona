@@ -64,6 +64,7 @@ class percona(
     $haproxy_balancermember_options = 'check port 9200 inter 12000 rise 3 fall 3 weight 100',
     $buffersize = $::percona::params::buffersize,
     $pool_instances = $::percona::params::pool_instances,
+    $max_connections = $::percona::params::max_connections,
 ) inherits ::percona::params {
 
 
