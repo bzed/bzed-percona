@@ -84,5 +84,5 @@ class percona::server::config {
         },
     }
 
-    $default_options = mysql_deepmerge(mysql_deepmerge({}, $mysql_options), $percona_options)
+    $default_options = deep_merge(deep_merge({}, $mysql_options), $percona_options)
 }

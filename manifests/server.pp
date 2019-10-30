@@ -53,7 +53,7 @@ class percona::server(
         },
     }
 
-    $override_options = mysql_deepmerge(
+    $override_options = deep_merge(
         $default_options,
         $server_default_options,
         $mysql_options
