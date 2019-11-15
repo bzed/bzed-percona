@@ -54,7 +54,7 @@ class percona::server::config {
             'long_query_time'                 => '0.75',
             'log_queries_not_using_indexes'   => '0',
             'slow_query_log'                  => '1',
-            'slow_query_log_file'             => "/var/log/mysql/${::hostname}-slow.log",
+            'slow_query_log_file'             => "/var/log/mysql/mysql-slow.log",
 
         },
     }
