@@ -17,7 +17,11 @@ class percona::server::haproxy(
   }
 
   $clusternodes = getvar("::percona_cluster_${clustername}")
-  $clusternodes_array = split($clusternodes, ',')
+  if $clusternodes {
+    $clusternodes_array = split($clusternodes, ',')
+  } else {
+    $clusternodes_array = undef
+  }
 
   if ($clusternodes_array
   and $wsrep_node_address
