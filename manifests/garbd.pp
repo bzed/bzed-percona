@@ -24,7 +24,7 @@ class percona::garbd(
     if ($galera_nodes and !empty($galera_nodes)) {
         ensure_packages($package)
 
-        if $::percona::params::garbd_fix_systemd == true {
+        if $package != 'percona-xtradb-cluster-garbd' {
             # work around having a buggy init script.
             # with some luck they'll ship a systemd service for jessie at some point
             service { $::percona::params::garbd_service :
