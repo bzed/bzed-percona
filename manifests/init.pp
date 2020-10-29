@@ -62,6 +62,7 @@ class percona(
     $haproxy_readonly_frontend_bind  = { "${wsrep_node_address}::3307" => [] },
     $haproxy_readwrite_frontend_bind = { "${wsrep_node_address}::3308" => [] },
     $haproxy_balancermember_options = 'check port 9200 inter 12000 rise 3 fall 3 weight 100',
+    $haproxy_readwrite_is_readonly_backup = false,
     $buffersize = $::percona::params::buffersize,
     $pool_instances = $::percona::params::pool_instances,
     $max_connections = $::percona::params::max_connections,
@@ -91,15 +92,16 @@ class percona(
 
     # haproxy
     class { '::percona::server::haproxy' :
-        clustername                     => $clustername,
-        wsrep_node_address              => $wsrep_node_address,
-        haproxy_global_options          => $haproxy_global_options,
-        haproxy_defaults_options        => $haproxy_defaults_options,
-        haproxy_backend_options         => $haproxy_backend_options,
-        haproxy_socket                  => $haproxy_socket,
-        haproxy_readonly_frontend_bind  => $haproxy_readonly_frontend_bind,
-        haproxy_readwrite_frontend_bind => $haproxy_readwrite_frontend_bind,
-        haproxy_balancermember_options  => $haproxy_balancermember_options,
-        require                         => Class['::percona::server::clustercheck'],
+        clustername                          => $clustername,
+        wsrep_node_address                   => $wsrep_node_address,
+        haproxy_global_options               => $haproxy_global_options,
+        haproxy_defaults_options             => $haproxy_defaults_options,
+        haproxy_backend_options              => $haproxy_backend_options,
+        haproxy_socket                       => $haproxy_socket,
+        haproxy_readonly_frontend_bind       => $haproxy_readonly_frontend_bind,
+        haproxy_readwrite_frontend_bind      => $haproxy_readwrite_frontend_bind,
+        haproxy_balancermember_options       => $haproxy_balancermember_options,
+        haproxy_readwrite_is_readonly_backup => $haproxy_readwrite_is_readonly_backup,
+        require                              => Class['::percona::server::clustercheck'],
     }
 }

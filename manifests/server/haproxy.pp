@@ -10,6 +10,7 @@ class percona::server::haproxy(
   $haproxy_readonly_frontend_bind  = { "${wsrep_node_address}:3307" => [] },
   $haproxy_readwrite_frontend_bind = { "${wsrep_node_address}:3308" => [] },
   $haproxy_balancermember_options = 'check port 9200 inter 12000 rise 3 fall 3 weight 100',
+  $haproxy_readwrite_is_readonly_backup = false,
 ){
 
   if $::osfamily == 'Debian' {
@@ -130,12 +131,18 @@ class percona::server::haproxy(
   Haproxy::Balancermember<<| listening_service == "${clustername}-ro" and tag == 'bzed-percona_cluster' |>>
   Haproxy::Balancermember<<| listening_service == "${clustername}-rw" and tag == 'bzed-percona_cluster' |>>
 
+  if $haproxy_readwrite_is_readonly_backup and $rw_backend {
+    $ro_backup = ' backup'
+  } else {
+    $ro_backup = ''
+  }
+
   @@::haproxy::balancermember{"${::hostname}-ro":
     listening_service => "${clustername}-ro",
     ports             => 3306,
     ipaddresses       => $wsrep_node_address,
     server_names      => $::hostname,
-    options           => $haproxy_balancermember_options,
+    options           => "${haproxy_balancermember_options}${ro_backup}",
     tag               => 'bzed-percona_cluster',
   }
 
@@ -144,7 +151,7 @@ class percona::server::haproxy(
     $rw_backup = ''
     #lint:endignore
   } else {
-    $rw_backup = 'backup'
+    $rw_backup = ' backup'
   }
 
   @@::haproxy::balancermember{"${::hostname}-rw":
@@ -152,7 +159,7 @@ class percona::server::haproxy(
     ports             => 3306,
     ipaddresses       => $wsrep_node_address,
     server_names      => $::hostname,
-    options           => "${haproxy_balancermember_options} ${rw_backup}",
+    options           => "${haproxy_balancermember_options}${rw_backup}",
     tag               => 'bzed-percona_cluster',
   }
 
